@@ -4,9 +4,14 @@
  * and open the template in the editor.
  */
 package edu.eci.arem.server;
+
 import edu.eci.arem.apps.mean;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,52 +24,55 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
+
+import javax.imageio.ImageIO;
 
 /**
  *
  * @author 2116387
  */
 public class AppServer {
-    
-    private static Map<String,Handler> URLHandlerMap = new HashMap<String, Handler>();
-    
-    public AppServer(){
-        
-    }
 
-    public static void initialize() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Class mean = Class.forName("edu.eci.arem.apps.mean");
-        
-        
-        for(Method m:mean.getMethods()){
-            if(m.isAnnotationPresent(Web.class)) {
-            	URLHandlerMap.put("/apps/"+m.getAnnotation(Web.class).value(), new StaticMethodHandler(m));
-            }
-                
-        }
-        
-    }
-    
-    public void load(String classpath) {
+	private static Map<String, Handler> URLHandlerMap = new HashMap<String, Handler>();
+
+	public AppServer() {
+
+	}
+
+	public static void initialize() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException {
+		Class mean = Class.forName("edu.eci.arem.apps.mean");
+
+		for (Method m : mean.getMethods()) {
+			if (m.isAnnotationPresent(Web.class)) {
+				URLHandlerMap.put("/apps/" + m.getAnnotation(Web.class).value(), new StaticMethodHandler(m));
+			}
+
+		}
+
+	}
+
+	public void load(String classpath) {
 //    	Class cls = Class.forName(classpath);
 //    	
 //    	for(Method m:cls.getMethods())
 //    		m.getParameterTypes()
-    }
+	}
 
-    public static void listen() throws IOException {
-        ServerSocket serverSocket = null;
-		
+	public static void listen() throws IOException {
+		ServerSocket serverSocket = null;
+
 		try {
 			serverSocket = new ServerSocket(35000);
 		} catch (IOException e) {
 		}
-		
+
 		Socket clientSocket = null;
-		
+
 		PrintWriter out;
 		BufferedReader in;
-		
+
 		while (true) {
 			try {
 				clientSocket = serverSocket.accept();
@@ -86,50 +94,76 @@ public class AppServer {
 				System.out.print(URLHandlerMap.keySet());
 				Object parameters[] = null;
 
-				if(request.matches("(/apps/)[a-z]+[?]+[a-z,=,&,a-z]*")) {
-					String s[] = request.split("?")[1].split("&");
-					parameters= new Object[s.length];
-					System.out.print("paso12121");
-					for(int i=0;i<parameters.length;i++)
-						parameters[i]=s[i].split("=");
+				if (request.matches("(/apps/)[a-z]+[?]+[A-Z,=,&,a-z,0-9,.]*")) {
+					String[] s = request.split("[?]")[1].split("[&]");
+					parameters = new Object[s.length];
+					for (int i = 0; i < parameters.length; i++)
+						parameters[i] = s[i].split("=")[1];
 				}
 				request = request.contains("?") ? request.substring(0, request.indexOf("?")) : request;
-					
+
 				if (URLHandlerMap.containsKey(request)) {
 					out.println("HTTP/1.1 200 OK\r");
 					out.println("Content-Type: text/html\r");
 					out.print("\n\r");
-					System.out.println(parameters.length+"1111");
-					out.println(parameters == null ? URLHandlerMap.get(request).process() : URLHandlerMap.get(request).process(parameters));
+					out.println(parameters == null ? URLHandlerMap.get(request).process()
+							: URLHandlerMap.get(request).process(parameters));
 				}
-				
-			} else if (request.matches(".*(.html)"))
-					handleHtml(out,request);
-		
-		out.close();
-		in.close();
-		
+
+			} else if (request.matches(".*(.html)")) {
+				handleHtml(out, request);
+			} else if (request.matches(".*(.png)")) {
+				handleImages(out, clientSocket.getOutputStream(), request);
+			}
+
+			out.close();
+			in.close();
+
 		}
 //		clientSocket.close();
 //		serverSocket.close();
 
-    }
-    
-    public static void handleHtml(PrintWriter out,String request) {
-    	String response=null;
+	}
+
+	public static void handleImages(PrintWriter out, OutputStream outStream, String request) {
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir")+"\\testFiles\\"+request));
-			String inputfile = null;
-			while((inputfile = reader.readLine())!=null)
-				response+=inputfile;
+			BufferedImage image = ImageIO.read(new File(System.getProperty("user.dir") + "\\testFiles\\" + request));
 			
+			outStream.flush();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(image, "png", baos);
+			byte[] imgByte=baos.toByteArray();
+			DataOutputStream dos = new DataOutputStream(outStream);
+			dos.writeBytes("HTTP/1.1 200 OK\r\n");
+			dos.writeBytes("Content-Type: image/png\r\n");
+			dos.writeBytes("Content-Length: "+imgByte.length+"\r\n");
+			dos.writeBytes("\r\n");
+			dos.write(imgByte);
+			dos.close();
+			
+			out.println(dos.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void handleHtml(PrintWriter out, String request) {
+		String response = null;
+		try {
+			BufferedReader reader = new BufferedReader(
+					new FileReader(System.getProperty("user.dir") + "\\testFiles\\" + request));
+			String inputfile = null;
+			while ((inputfile = reader.readLine()) != null)
+				response += inputfile;
+
 			out.println("HTTP/1.1 200 OK\r");
 			out.println("Content-Type: text/html\r");
-			out.print("\n\r");
+			out.println("\n\r");
 			out.print(response);
-			
+
 			reader.close();
-			
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -137,6 +171,6 @@ public class AppServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
+	}
 
 }
