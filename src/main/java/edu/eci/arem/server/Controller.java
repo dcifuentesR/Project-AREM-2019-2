@@ -11,8 +11,9 @@ import java.util.logging.Logger;
  */
 public class Controller 
 {
-    public static void main( String[] args ) throws ClassNotFoundException, IOException
+    public static void main( String[] args ) throws ClassNotFoundException, IOException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
     {
+    	AppServer.initialize();
         AppServer.listen();
         try {
             AppServer.initialize();

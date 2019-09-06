@@ -13,4 +13,6 @@ public interface Handler {
     
     public String process();
     
+    public String process(Object[] parameters);
+    
 }

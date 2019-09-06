@@ -14,9 +14,15 @@ import edu.eci.arem.server.Web;
  */
 public class mean {
     
-    @Web
+    @Web(value="hola")
     public static String calcMean(){
-        return "hola";
+    	System.out.print("hola????");
+        return "hola como estas?";
+    }
+    
+    @Web(value="othermethod")
+    public static String otherMethod(int num1,double num2) {
+    	return Double.toString(num1*num2);
     }
     
 }

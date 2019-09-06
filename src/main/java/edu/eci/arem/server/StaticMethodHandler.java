@@ -5,6 +5,7 @@
  */
 package edu.eci.arem.server;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -14,9 +15,44 @@ import java.lang.reflect.Method;
 public class StaticMethodHandler implements Handler{
     
     private Method method;
+    
+    public StaticMethodHandler(Method method) {
+    	this.method = method;
+    }
 
     public String process() {
-        throw new UnsupportedOperationException("Not supported yet."); //To
+        try {
+			return method.invoke(null, null).toString();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return null;
     }
+    
+    public String process(Object[] parameters) {
+    	try {
+    		
+			return method.invoke(null, parameters).toString();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return null;
+    }
+
+	
     
 }
