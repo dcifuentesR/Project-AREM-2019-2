@@ -107,7 +107,7 @@ public class AppServer {
 				if (URLHandlerMap.containsKey(request)) {
 					out.println("HTTP/1.1 200 OK\r");
 					out.println("Content-Type: text/html\r");
-					out.print("\n\r");
+					out.print("\r");
 					out.println(parameters == null ? URLHandlerMap.get(request).process()
 							: URLHandlerMap.get(request).process(parameters));
 				}
@@ -116,6 +116,8 @@ public class AppServer {
 				handleHtml(out, request);
 			} else if (request.matches(".*(.png)")) {
 				handleImages(out, clientSocket.getOutputStream(), request);
+			} else if (request.matches(".*(.ico)")) {
+				handleFavicon(out, clientSocket.getOutputStream(), request);
 			}
 
 			out.close();
@@ -129,7 +131,7 @@ public class AppServer {
 
 	public static void handleImages(PrintWriter out, OutputStream outStream, String request) {
 		try {
-			BufferedImage image = ImageIO.read(new File(System.getProperty("user.dir") + "\\testFiles\\" + request));
+			BufferedImage image = ImageIO.read(new File(System.getProperty("user.dir") + "/testFiles/" + request));
 			
 			outStream.flush();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -139,7 +141,7 @@ public class AppServer {
 			dos.writeBytes("HTTP/1.1 200 OK\r\n");
 			dos.writeBytes("Content-Type: image/png\r\n");
 			dos.writeBytes("Content-Length: "+imgByte.length+"\r\n");
-			dos.writeBytes("\r\n");
+			dos.writeBytes("\r");
 			dos.write(imgByte);
 			dos.close();
 			
@@ -154,14 +156,14 @@ public class AppServer {
 		String response = null;
 		try {
 			BufferedReader reader = new BufferedReader(
-					new FileReader(System.getProperty("user.dir") + "\\testFiles\\" + request));
+					new FileReader(System.getProperty("user.dir") + "/testFiles/" + request));
 			String inputfile = null;
 			while ((inputfile = reader.readLine()) != null)
 				response += inputfile;
 
 			out.println("HTTP/1.1 200 OK\r");
 			out.println("Content-Type: text/html\r");
-			out.println("\n\r");
+			out.println("\r");
 			out.print(response);
 
 			reader.close();
@@ -180,7 +182,7 @@ public class AppServer {
 		out.println("Content-Type: image/vnd.microsoft.icon \r");
 		out.println("\r");
 		
-		List<BufferedImage> images = ICODecoder.read(new File(System.getProperty("user.dir") + "/testFiles" + request));
+		List<BufferedImage> images = ICODecoder.read(new File(System.getProperty("user.dir") + "/testFiles/" + request));
         ICOEncoder.write(images.get(0), outStream);
 	}
 
