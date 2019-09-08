@@ -131,7 +131,7 @@ public class AppServer {
 
 	public static void handleImages(PrintWriter out, OutputStream outStream, String request) {
 		try {
-			BufferedImage image = ImageIO.read(new File(System.getProperty("user.dir") + "/testFiles/" + request));
+			BufferedImage image = ImageIO.read(new File(System.getProperty("user.dir") + "/testFiles" + request));
 			
 			outStream.flush();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -156,7 +156,7 @@ public class AppServer {
 		String response = null;
 		try {
 			BufferedReader reader = new BufferedReader(
-					new FileReader(System.getProperty("user.dir") + "/testFiles/" + request));
+					new FileReader(System.getProperty("user.dir") + "/testFiles" + request));
 			String inputfile = null;
 			while ((inputfile = reader.readLine()) != null)
 				response += inputfile;
@@ -182,7 +182,7 @@ public class AppServer {
 		out.println("Content-Type: image/vnd.microsoft.icon \r");
 		out.println("\r");
 		
-		List<BufferedImage> images = ICODecoder.read(new File(System.getProperty("user.dir") + "/testFiles/" + request));
+		List<BufferedImage> images = ICODecoder.read(new File(System.getProperty("user.dir") + "/testFiles" + request));
         ICOEncoder.write(images.get(0), outStream);
 	}
 
