@@ -6,6 +6,8 @@
 package edu.eci.arem.server;
 
 import edu.eci.arem.apps.mean;
+import net.sf.image4j.codec.ico.ICODecoder;
+import net.sf.image4j.codec.ico.ICOEncoder;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -23,8 +25,8 @@ import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
@@ -171,6 +173,15 @@ public class AppServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static void handleFavicon(PrintWriter out, OutputStream outStream, String request) throws IOException {
+		out.println("HTTP/1.1 200 OK \r");
+		out.println("Content-Type: image/vnd.microsoft.icon \r");
+		out.println("\r");
+		
+		List<BufferedImage> images = ICODecoder.read(new File(System.getProperty("user.dir") + "/testFiles" + request));
+        ICOEncoder.write(images.get(0), outStream);
 	}
 
 }
