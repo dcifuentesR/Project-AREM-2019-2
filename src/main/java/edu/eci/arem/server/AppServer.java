@@ -110,10 +110,10 @@ public class AppServer {
 				if (URLHandlerMap.containsKey(request)) {
 					out.println("HTTP/1.1 200 OK\r");
 					out.println("Content-Type: text/html\r");
-					out.print("\r");
+					out.println("\r");
 					System.out.println(URLHandlerMap.get(request).process());
-					out.print(URLHandlerMap.get(request).process());
-					out.print(parameters == null ? URLHandlerMap.get(request).process()
+					out.println(URLHandlerMap.get(request).process());
+					out.println(parameters == null ? URLHandlerMap.get(request).process()
 							: URLHandlerMap.get(request).process(parameters));
 				}
 
