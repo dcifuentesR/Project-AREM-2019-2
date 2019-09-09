@@ -38,9 +38,9 @@ public class StaticMethodHandler implements Handler{
     
     public String process(Object[] parameters) {
     	try {
-    		Class<?> classes[] = method.getParameterTypes();
-    		for(int i=0;i<classes.length;i++)
-    			parameters[i]=classes[i].cast(parameters[i]);
+//    		Class<?> classes[] = method.getParameterTypes();
+//    		for(int i=0;i<classes.length;i++)
+//    			parameters[i]=classes[i].cast(parameters[i]);
     		
 			return method.invoke(null, parameters).toString();
 		} catch (IllegalAccessException e) {

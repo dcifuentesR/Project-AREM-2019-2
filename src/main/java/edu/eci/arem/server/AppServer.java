@@ -111,8 +111,6 @@ public class AppServer {
 					out.println("HTTP/1.1 200 OK\r");
 					out.println("Content-Type: text/html\r");
 					out.println("\r");
-					System.out.println(URLHandlerMap.get(request).process());
-					out.println(URLHandlerMap.get(request).process());
 					out.println(parameters == null ? URLHandlerMap.get(request).process()
 							: URLHandlerMap.get(request).process(parameters));
 				}
