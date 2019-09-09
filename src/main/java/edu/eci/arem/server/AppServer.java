@@ -123,8 +123,8 @@ public class AppServer {
 				handleFavicon(out, clientSocket.getOutputStream(), request);
 			}
 
-			out.close();
-			in.close();
+//			out.close();
+//			in.close();
 		}
 //		clientSocket.close();
 //		serverSocket.close();
