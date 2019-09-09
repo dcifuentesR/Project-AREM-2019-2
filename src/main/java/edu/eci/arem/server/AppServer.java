@@ -98,7 +98,6 @@ public class AppServer {
 			if (request.matches("(/apps).*")) {
 				System.out.print(URLHandlerMap.keySet());
 				Object parameters[] = null;
-				System.out.println("PASA------------------------");
 
 				if (request.matches("(/apps/)[a-z]+[?]+[A-Z,=,&,a-z,0-9,.]*")) {
 					String[] s = request.split("[?]")[1].split("[&]");
@@ -106,13 +105,12 @@ public class AppServer {
 					for (int i = 0; i < parameters.length; i++)
 						parameters[i] = s[i].split("=")[1];
 				}
-				System.out.println(request.contains("?")+"+++++++"+request+"+++++++");
 				request = request.contains("?") ? request.substring(0, request.indexOf("?")) : request;
 
 				if (URLHandlerMap.containsKey(request)) {
 					out.println("HTTP/1.1 200 OK\n\r");
 					out.println("Content-Type: text/html\n\r");
-					out.print("\n\r");
+					out.print("\r");
 					out.println(parameters == null ? URLHandlerMap.get(request).process()
 							: URLHandlerMap.get(request).process(parameters));
 				}
@@ -145,7 +143,7 @@ public class AppServer {
 			dos.writeBytes("HTTP/1.1 200 OK\n\r");
 			dos.writeBytes("Content-Type: image/png\n\r");
 			dos.writeBytes("Content-Length: "+imgByte.length+"\n\r");
-			dos.writeBytes("\n\r");
+			dos.writeBytes("\r");
 			dos.write(imgByte);
 			dos.close();
 			
@@ -167,7 +165,7 @@ public class AppServer {
 
 			out.println("HTTP/1.1 200 OK\n\r");
 			out.println("Content-Type: text/html\n\r");
-			out.println("\n\r");
+			out.println("\r");
 			out.print(response);
 
 			reader.close();
@@ -184,7 +182,7 @@ public class AppServer {
 	public static void handleFavicon(PrintWriter out, OutputStream outStream, String request) throws IOException {
 		out.println("HTTP/1.1 200 OK \n\r");
 		out.println("Content-Type: image/vnd.microsoft.icon \n\r");
-		out.println("\n\r");
+		out.println("\r");
 		
 		List<BufferedImage> images = ICODecoder.read(new File(System.getProperty("user.dir") + "/testFiles" + request));
         ICOEncoder.write(images.get(0), outStream);
