@@ -158,11 +158,12 @@ public class AppServer {
 		try {
 			BufferedReader reader = new BufferedReader(
 					new FileReader(System.getProperty("user.dir") + "/testFiles" + request));
-			String inputfile ="";
-			while ((inputfile = reader.readLine()) != null)
-				response += inputfile;
-			System.out.println(response+"---------");
+			String inputfile;
+			while ((inputfile = reader.readLine()) != null) {
 
+				System.out.println(inputfile+"------");
+				response += inputfile;
+			}
 			out.println("HTTP/1.1 200 OK\r");
 			out.println("Content-Type: text/html\r");
 			out.println("\r");
