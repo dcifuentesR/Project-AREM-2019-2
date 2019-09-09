@@ -98,6 +98,7 @@ public class AppServer {
 			if (request.matches("(/apps).*")) {
 				System.out.print(URLHandlerMap.keySet());
 				Object parameters[] = null;
+				System.out.println("PASA------------------------");
 
 				if (request.matches("(/apps/)[a-z]+[?]+[A-Z,=,&,a-z,0-9,.]*")) {
 					String[] s = request.split("[?]")[1].split("[&]");
@@ -135,24 +136,20 @@ public class AppServer {
 
 	public static void handleImages(PrintWriter out, OutputStream outStream, String request) {
 		try {
-			out.println("HTTP/1.1 200 OK\r");
-	        out.println("Content-Type: image/png\r");
-	        out.println("\n\r");
 			BufferedImage image = ImageIO.read(new File(System.getProperty("user.dir") + "/testFiles" + request));
 			
-			outStream.flush();
-//			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(image, "png", outStream);
-//			byte[] imgByte=baos.toByteArray();
-//			DataOutputStream dos = new DataOutputStream(outStream);
-//			dos.writeBytes("HTTP/1.1 200 OK\r\n");
-//			dos.writeBytes("Content-Type: image/png\r\n");
-//			dos.writeBytes("Content-Length: "+imgByte.length+"\r\n");
-//			dos.writeBytes("\r");
-//			dos.write(imgByte);
-//			dos.close();
-//			
-//			out.println(dos.toString());
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(image, "png", baos);
+			byte[] imgByte=baos.toByteArray();
+			DataOutputStream dos = new DataOutputStream(outStream);
+			dos.writeBytes("HTTP/1.1 200 OK\r\n");
+			dos.writeBytes("Content-Type: image/png\r\n");
+			dos.writeBytes("Content-Length: "+imgByte.length+"\r\n");
+			dos.writeBytes("\r");
+			dos.write(imgByte);
+			dos.close();
+			
+			out.println(dos.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
