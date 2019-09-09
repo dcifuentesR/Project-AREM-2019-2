@@ -154,20 +154,18 @@ public class AppServer {
 	}
 
 	public static void handleHtml(PrintWriter out, String request) {
-		String response = null;
+		StringBuilder response = new StringBuilder();
+		
 		try {
 			BufferedReader reader = new BufferedReader(
 					new FileReader(System.getProperty("user.dir") + "/testFiles" + request));
 			String inputfile;
-			while ((inputfile = reader.readLine()) != null) {
-
-				System.out.println(inputfile+"------");
-				response += inputfile;
-			}
+			while ((inputfile = reader.readLine()) != null)
+				response.append(inputfile);
 			out.println("HTTP/1.1 200 OK\r");
 			out.println("Content-Type: text/html\r");
 			out.println("\r");
-			out.println(response);
+			out.println(response.toString());
 
 			reader.close();
 
