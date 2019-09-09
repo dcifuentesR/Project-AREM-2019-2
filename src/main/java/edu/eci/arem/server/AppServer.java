@@ -110,9 +110,9 @@ public class AppServer {
 				request = request.contains("?") ? request.substring(0, request.indexOf("?")) : request;
 
 				if (URLHandlerMap.containsKey(request)) {
-					out.println("HTTP/1.1 200 OK\r");
-					out.println("Content-Type: text/html\r");
-					out.print("\r");
+					out.println("HTTP/1.1 200 OK\n");
+					out.println("Content-Type: text/html\n");
+					out.print("\n");
 					out.println(parameters == null ? URLHandlerMap.get(request).process()
 							: URLHandlerMap.get(request).process(parameters));
 				}
@@ -142,10 +142,10 @@ public class AppServer {
 			ImageIO.write(image, "png", baos);
 			byte[] imgByte=baos.toByteArray();
 			DataOutputStream dos = new DataOutputStream(outStream);
-			dos.writeBytes("HTTP/1.1 200 OK\r\n");
-			dos.writeBytes("Content-Type: image/png\r\n");
-			dos.writeBytes("Content-Length: "+imgByte.length+"\r\n");
-			dos.writeBytes("\r");
+			dos.writeBytes("HTTP/1.1 200 OK\n");
+			dos.writeBytes("Content-Type: image/png\n");
+			dos.writeBytes("Content-Length: "+imgByte.length+"\n");
+			dos.writeBytes("\n");
 			dos.write(imgByte);
 			dos.close();
 			
@@ -165,9 +165,9 @@ public class AppServer {
 			while ((inputfile = reader.readLine()) != null)
 				response += inputfile;
 
-			out.println("HTTP/1.1 200 OK\r");
-			out.println("Content-Type: text/html\r");
-			out.println("\r");
+			out.println("HTTP/1.1 200 OK\n");
+			out.println("Content-Type: text/html\n");
+			out.println("\n");
 			out.print(response);
 
 			reader.close();
@@ -182,9 +182,9 @@ public class AppServer {
 	}
 	
 	public static void handleFavicon(PrintWriter out, OutputStream outStream, String request) throws IOException {
-		out.println("HTTP/1.1 200 OK \r");
-		out.println("Content-Type: image/vnd.microsoft.icon \r");
-		out.println("\r");
+		out.println("HTTP/1.1 200 OK \n");
+		out.println("Content-Type: image/vnd.microsoft.icon \n");
+		out.println("\n");
 		
 		List<BufferedImage> images = ICODecoder.read(new File(System.getProperty("user.dir") + "/testFiles" + request));
         ICOEncoder.write(images.get(0), outStream);
