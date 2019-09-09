@@ -16,7 +16,6 @@ public class mean {
     
     @Web(value="hola")
     public static String calcMean(){
-    	System.out.print("hola????");
         return "hola como estas?";
     }
     

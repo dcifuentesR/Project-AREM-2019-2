@@ -108,8 +108,8 @@ public class AppServer {
 				request = request.contains("?") ? request.substring(0, request.indexOf("?")) : request;
 
 				if (URLHandlerMap.containsKey(request)) {
-					out.println("HTTP/1.1 200 OK\n\r");
-					out.println("Content-Type: text/html\n\r");
+					out.println("HTTP/1.1 200 OK\r");
+					out.println("Content-Type: text/html\r");
 					out.print("\r");
 					out.println(parameters == null ? URLHandlerMap.get(request).process()
 							: URLHandlerMap.get(request).process(parameters));
@@ -140,14 +140,15 @@ public class AppServer {
 			ImageIO.write(image, "png", baos);
 			byte[] imgByte=baos.toByteArray();
 			DataOutputStream dos = new DataOutputStream(outStream);
-			dos.writeBytes("HTTP/1.1 200 OK\n\r");
-			dos.writeBytes("Content-Type: image/png\n\r");
-			dos.writeBytes("Content-Length: "+imgByte.length+"\n\r");
+			dos.writeBytes("HTTP/1.1 200 OK\r");
+			dos.writeBytes("Content-Type: image/png\r");
+			dos.writeBytes("Content-Length: "+imgByte.length+"\r");
 			dos.writeBytes("\r");
 			dos.write(imgByte);
-			dos.close();
 			
 			out.println(dos.toString());
+
+			dos.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -163,8 +164,8 @@ public class AppServer {
 			while ((inputfile = reader.readLine()) != null)
 				response += inputfile;
 
-			out.println("HTTP/1.1 200 OK\n\r");
-			out.println("Content-Type: text/html\n\r");
+			out.println("HTTP/1.1 200 OK\r");
+			out.println("Content-Type: text/html\r");
 			out.println("\r");
 			out.print(response);
 
@@ -180,8 +181,8 @@ public class AppServer {
 	}
 	
 	public static void handleFavicon(PrintWriter out, OutputStream outStream, String request) throws IOException {
-		out.println("HTTP/1.1 200 OK \n\r");
-		out.println("Content-Type: image/vnd.microsoft.icon \n\r");
+		out.println("HTTP/1.1 200 OK \r");
+		out.println("Content-Type: image/vnd.microsoft.icon \r");
 		out.println("\r");
 		
 		List<BufferedImage> images = ICODecoder.read(new File(System.getProperty("user.dir") + "/testFiles" + request));
