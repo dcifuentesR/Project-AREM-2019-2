@@ -19,7 +19,7 @@ public class mean {
         return "hola como estas?";
     }
     
-    @Web(value="othermethod")
+    @Web(value="product")
     public static String otherMethod(String num1,String num2) {
     	return Integer.toString(Integer.parseInt(num1)*Integer.parseInt(num2));
     }
