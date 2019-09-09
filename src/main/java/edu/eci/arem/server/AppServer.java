@@ -54,16 +54,6 @@ public class AppServer {
 			for(Method m:c.getMethods())
 				if(m.isAnnotationPresent(Web.class)) 
 					URLHandlerMap.put("/apps/"+m.getAnnotation(Web.class).value(), new StaticMethodHandler(m));
-				
-//		Class mean = Class.forName("edu.eci.arem.apps.mean");
-//
-//		for (Method m : mean.getMethods()) {
-//			if (m.isAnnotationPresent(Web.class)) {
-//				URLHandlerMap.put("/apps/" + m.getAnnotation(Web.class).value(), new StaticMethodHandler(m));
-//			}
-//
-//		}
-
 	}
 
 	public static void listen() throws IOException {
@@ -97,28 +87,12 @@ public class AppServer {
 				if (!in.ready())
 					break;
 			}
-			System.out.print(request);
+			System.out.println(request);
 			request = request == null ? "/error.html" : request;
             request = request.equals("/") ? "/index.html" : request;
 			if (request.matches("(/apps).*")) {
 				System.out.print(URLHandlerMap.keySet());
-				Object parameters[] = null;
-
-				if (request.matches("(/apps/)[a-z]+[?]+[A-Z,=,&,a-z,0-9,.]*")) {
-					String[] s = request.split("[?]")[1].split("[&]");
-					parameters = new Object[s.length];
-					for (int i = 0; i < parameters.length; i++)
-						parameters[i] = s[i].split("=")[1];
-				}
-				request = request.contains("?") ? request.substring(0, request.indexOf("?")) : request;
-
-				if (URLHandlerMap.containsKey(request)) {
-					out.println("HTTP/1.1 200 OK\r");
-					out.println("Content-Type: text/html\r");
-					out.println("\r");
-					out.println(parameters == null ? URLHandlerMap.get(request).process()
-							: URLHandlerMap.get(request).process(parameters));
-				}
+				handleMethodCalls(out, request);
 
 			} else if (request.matches(".*(.html)")) {
 				handleHtml(out, request);
@@ -136,6 +110,31 @@ public class AppServer {
 //		clientSocket.close();
 //		serverSocket.close();
 
+	}
+
+	private static void handleMethodCalls(PrintWriter out, String request) {
+		Object[] parameters = getParameters(request);
+		request = request.contains("?") ? request.substring(0, request.indexOf("?")) : request;
+
+		if (URLHandlerMap.containsKey(request)) {
+			out.println("HTTP/1.1 200 OK\r");
+			out.println("Content-Type: text/html\r");
+			out.println("\r");
+			out.println(URLHandlerMap.get(request).process(parameters));
+		}
+	}
+
+	private static Object[] getParameters(String request) {
+		Object parameters[] = null;
+
+		if (request.matches("(/apps/)[a-z]+[?]+[A-Z,=,&,a-z,0-9,.]*")) {
+			String[] s = request.split("[?]")[1].split("[&]");
+			parameters = new Object[s.length];
+			for (int i = 0; i < parameters.length; i++)
+				parameters[i] = s[i].split("=")[1];
+		}
+		
+		return parameters;
 	}
 
 	public static void handleImages(PrintWriter out, OutputStream outStream, String request) {

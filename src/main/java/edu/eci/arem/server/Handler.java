@@ -11,8 +11,6 @@ package edu.eci.arem.server;
  */
 public interface Handler {
     
-    public String process();
-    
     public String process(Object[] parameters);
     
 }

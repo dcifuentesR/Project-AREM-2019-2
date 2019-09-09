@@ -19,28 +19,9 @@ public class StaticMethodHandler implements Handler{
     public StaticMethodHandler(Method method) {
     	this.method = method;
     }
-
-    public String process() {
-        try {
-			return method.invoke(null, null).toString();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        return null;
-    }
     
     public String process(Object[] parameters) {
     	try {
-//    		Class<?> classes[] = method.getParameterTypes();
-//    		for(int i=0;i<classes.length;i++)
-//    			parameters[i]=classes[i].cast(parameters[i]);
 			return method.invoke(null, parameters).toString();
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
