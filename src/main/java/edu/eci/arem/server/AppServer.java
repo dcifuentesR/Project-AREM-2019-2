@@ -66,7 +66,7 @@ public class AppServer {
 		ServerSocket serverSocket = null;
 
 		try {
-			serverSocket = new ServerSocket(35000);
+			serverSocket = new ServerSocket(getPort());
 		} catch (IOException e) {
 		}
 
@@ -77,8 +77,10 @@ public class AppServer {
 
 		while (true) {
 			try {
+				System.out.println("Ready to recieve...");
 				clientSocket = serverSocket.accept();
 			} catch (IOException e) {
+				System.out.println("Accept failed...");
 				e.printStackTrace();
 			}
 			out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -92,6 +94,8 @@ public class AppServer {
 					break;
 			}
 			System.out.print(request);
+			request = request == null ? "/error.html" : request;
+            request = request.equals("/") ? "/index.html" : request;
 			if (request.matches("(/apps).*")) {
 				System.out.print(URLHandlerMap.keySet());
 				Object parameters[] = null;
@@ -184,6 +188,11 @@ public class AppServer {
 		
 		List<BufferedImage> images = ICODecoder.read(new File(System.getProperty("user.dir") + "/testFiles" + request));
         ICOEncoder.write(images.get(0), outStream);
+	}
+	
+	
+	private static int getPort() {
+		return System.getenv("PORT") != null? Integer.parseInt(System.getenv("PORT")) : 4567;
 	}
 
 }
