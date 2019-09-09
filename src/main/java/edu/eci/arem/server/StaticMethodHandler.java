@@ -22,7 +22,6 @@ public class StaticMethodHandler implements Handler{
 
     public String process() {
         try {
-        	System.out.print("pasa sin args");
 			return method.invoke(null, null).toString();
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
