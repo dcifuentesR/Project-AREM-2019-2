@@ -41,8 +41,6 @@ public class StaticMethodHandler implements Handler{
 //    		Class<?> classes[] = method.getParameterTypes();
 //    		for(int i=0;i<classes.length;i++)
 //    			parameters[i]=classes[i].cast(parameters[i]);
-    		for(Object o:parameters)
-    			System.out.print(o.getClass().getTypeName());
 			return method.invoke(null, parameters).toString();
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block

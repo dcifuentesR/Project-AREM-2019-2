@@ -20,8 +20,8 @@ public class mean {
     }
     
     @Web(value="othermethod")
-    public static String otherMethod(int num1,int num2) {
-    	return Double.toString(num1*num2);
+    public static String otherMethod(String num1,String num2) {
+    	return Integer.toString(Integer.parseInt(num1)*Integer.parseInt(num2));
     }
     
 }
