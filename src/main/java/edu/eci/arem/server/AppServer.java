@@ -158,7 +158,7 @@ public class AppServer {
 		try {
 			BufferedReader reader = new BufferedReader(
 					new FileReader(System.getProperty("user.dir") + "/testFiles" + request));
-			String inputfile;
+			String inputfile ="";
 			while ((inputfile = reader.readLine()) != null)
 				response += inputfile;
 			System.out.println(response+"---------");
