@@ -161,6 +161,7 @@ public class AppServer {
 			String inputfile = null;
 			while ((inputfile = reader.readLine()) != null)
 				response += inputfile;
+			System.out.println(response+"---------");
 
 			out.println("HTTP/1.1 200 OK\r");
 			out.println("Content-Type: text/html\r");
