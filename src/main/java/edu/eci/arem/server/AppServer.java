@@ -117,7 +117,7 @@ public class AppServer {
 
 			} else if (request.matches(".*(.html)")) {
 				handleHtml(out, request);
-			} else if (request.matches(".*(.png)")) {
+			} else if (request.matches(".*(.PNG)")) {
 				handleImages(out, clientSocket.getOutputStream(), request);
 			} else if (request.matches(".*(.ico)")) {
 				handleFavicon(out, clientSocket.getOutputStream(), request);
