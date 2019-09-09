@@ -5,7 +5,6 @@
  */
 package edu.eci.arem.server;
 
-import edu.eci.arem.apps.mean;
 import net.sf.image4j.codec.ico.ICODecoder;
 import net.sf.image4j.codec.ico.ICOEncoder;
 
@@ -106,6 +105,7 @@ public class AppServer {
 					for (int i = 0; i < parameters.length; i++)
 						parameters[i] = s[i].split("=")[1];
 				}
+				System.out.println(request.contains("?")+"+++++++"+request+"+++++++");
 				request = request.contains("?") ? request.substring(0, request.indexOf("?")) : request;
 
 				if (URLHandlerMap.containsKey(request)) {
@@ -135,21 +135,24 @@ public class AppServer {
 
 	public static void handleImages(PrintWriter out, OutputStream outStream, String request) {
 		try {
+			out.println("HTTP/1.1 200 OK\r");
+	        out.println("Content-Type: image/png\r");
+	        out.println("\n\r");
 			BufferedImage image = ImageIO.read(new File(System.getProperty("user.dir") + "/testFiles" + request));
 			
 			outStream.flush();
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(image, "png", baos);
-			byte[] imgByte=baos.toByteArray();
-			DataOutputStream dos = new DataOutputStream(outStream);
-			dos.writeBytes("HTTP/1.1 200 OK\r\n");
-			dos.writeBytes("Content-Type: image/png\r\n");
-			dos.writeBytes("Content-Length: "+imgByte.length+"\r\n");
-			dos.writeBytes("\r");
-			dos.write(imgByte);
-			dos.close();
-			
-			out.println(dos.toString());
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(image, "png", outStream);
+//			byte[] imgByte=baos.toByteArray();
+//			DataOutputStream dos = new DataOutputStream(outStream);
+//			dos.writeBytes("HTTP/1.1 200 OK\r\n");
+//			dos.writeBytes("Content-Type: image/png\r\n");
+//			dos.writeBytes("Content-Length: "+imgByte.length+"\r\n");
+//			dos.writeBytes("\r");
+//			dos.write(imgByte);
+//			dos.close();
+//			
+//			out.println(dos.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
