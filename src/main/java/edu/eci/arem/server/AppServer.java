@@ -125,7 +125,6 @@ public class AppServer {
 
 			out.close();
 			in.close();
-
 		}
 //		clientSocket.close();
 //		serverSocket.close();
@@ -134,8 +133,9 @@ public class AppServer {
 
 	public static void handleImages(PrintWriter out, OutputStream outStream, String request) {
 		try {
+//			new File(System.getProperty("user.dir") + "/testFiles" + request
+			System.out.println(new File(System.getProperty("user.dir") + "/testFiles" + request).exists()+"---existe?");
 			BufferedImage image = ImageIO.read(new File(System.getProperty("user.dir") + "/testFiles" + request));
-			
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(image, "png", baos);
 			byte[] imgByte=baos.toByteArray();
