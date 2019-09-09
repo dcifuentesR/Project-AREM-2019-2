@@ -26,8 +26,12 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
+
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
 
 /**
  *
@@ -43,22 +47,23 @@ public class AppServer {
 
 	public static void initialize() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
-		Class mean = Class.forName("edu.eci.arem.apps.mean");
+		
+		Reflections reflections = new Reflections("edu.eci.arem.apps", new SubTypesScanner(false));
+		Set<Class<? extends Object>> classes = reflections.getSubTypesOf(Object.class);
+		for(Class c:classes)
+			for(Method m:c.getMethods())
+				if(m.isAnnotationPresent(Web.class)) 
+					URLHandlerMap.put("/apps/"+m.getAnnotation(Web.class).value(), new StaticMethodHandler(m));
+				
+//		Class mean = Class.forName("edu.eci.arem.apps.mean");
+//
+//		for (Method m : mean.getMethods()) {
+//			if (m.isAnnotationPresent(Web.class)) {
+//				URLHandlerMap.put("/apps/" + m.getAnnotation(Web.class).value(), new StaticMethodHandler(m));
+//			}
+//
+//		}
 
-		for (Method m : mean.getMethods()) {
-			if (m.isAnnotationPresent(Web.class)) {
-				URLHandlerMap.put("/apps/" + m.getAnnotation(Web.class).value(), new StaticMethodHandler(m));
-			}
-
-		}
-
-	}
-
-	public void load(String classpath) {
-//    	Class cls = Class.forName(classpath);
-//    	
-//    	for(Method m:cls.getMethods())
-//    		m.getParameterTypes()
 	}
 
 	public static void listen() throws IOException {
@@ -160,7 +165,7 @@ public class AppServer {
 			out.println("HTTP/1.1 200 OK\r");
 			out.println("Content-Type: text/html\r");
 			out.println("\r");
-			out.print(response);
+			out.println(response);
 
 			reader.close();
 
