@@ -123,8 +123,9 @@ public class AppServer {
 				handleFavicon(out, clientSocket.getOutputStream(), request);
 			}
 
-//			out.close();
-//			in.close();
+			in.close();
+			out.close();
+			
 		}
 //		clientSocket.close();
 //		serverSocket.close();
@@ -133,22 +134,26 @@ public class AppServer {
 
 	public static void handleImages(PrintWriter out, OutputStream outStream, String request) {
 		try {
+			out.println("HTTP/1.1 200 OK\r");
+			out.println("Content-Type: image/png\r");
+//			out.println("Content-Length: "+imgByte.length+"\r");
+			out.println("\r");
 //			new File(System.getProperty("user.dir") + "/testFiles" + request
 			System.out.println(new File(System.getProperty("user.dir") + "/testFiles" + request).exists()+"---existe?");
 			BufferedImage image = ImageIO.read(new File(System.getProperty("user.dir") + "/testFiles" + request));
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(image, "png", baos);
-			byte[] imgByte=baos.toByteArray();
-			DataOutputStream dos = new DataOutputStream(outStream);
-			dos.writeBytes("HTTP/1.1 200 OK\r");
-			dos.writeBytes("Content-Type: image/png\r");
-			dos.writeBytes("Content-Length: "+imgByte.length+"\r");
-			dos.writeBytes("\r");
-			dos.write(imgByte);
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(image, "png", outStream);
+//			byte[] imgByte=baos.toByteArray();
+//			DataOutputStream dos = new DataOutputStream(outStream);
+//			dos.writeBytes("HTTP/1.1 200 OK\r");
+//			dos.writeBytes("Content-Type: image/png\r");
+//			dos.writeBytes("Content-Length: "+imgByte.length+"\r");
+//			dos.writeBytes("\r");
+//			dos.write(imgByte);
 			
-			out.println(dos.toString());
-
-			dos.close();
+//			out.println(dos.toString());
+//
+//			dos.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
