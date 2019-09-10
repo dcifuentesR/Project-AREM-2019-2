@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.eci.arem.server;
+package edu.eci.arem.handlers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

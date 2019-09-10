@@ -33,6 +33,10 @@ import javax.imageio.ImageIO;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 
+import edu.eci.arem.annotations.Web;
+import edu.eci.arem.handlers.Handler;
+import edu.eci.arem.handlers.StaticMethodHandler;
+
 /**
  *
  * @author 2116387

@@ -1,6 +1,6 @@
 package edu.eci.arem.apps;
 
-import edu.eci.arem.server.Web;
+import edu.eci.arem.annotations.Web;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -12,16 +12,16 @@ import edu.eci.arem.server.Web;
  *
  * @author 2116387
  */
-public class mean {
+public class SampleMethods {
     
     @Web(value="hola")
-    public static String calcMean(){
+    public static String greet(){
         return "hola como estas?";
     }
     
     @Web(value="product")
-    public static String otherMethod(String num1,String num2) {
-    	return Integer.toString(Integer.parseInt(num1)*Integer.parseInt(num2));
+    public static String multiply(String num1,String num2) {
+    	return "El producto es: "+Integer.toString(Integer.parseInt(num1)*Integer.parseInt(num2));
     }
     
 }
