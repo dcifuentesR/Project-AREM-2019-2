@@ -41,7 +41,7 @@ import edu.eci.arem.handlers.StaticMethodHandler;
  *
  * @author 2116387
  */
-public class AppServer {
+public class AppServer implements Runnable{
 
 	private static Map<String, Handler> URLHandlerMap = new HashMap<String, Handler>();
 
@@ -75,7 +75,9 @@ public class AppServer {
 
 		while (true) {
 			try {
+				System.out.println("Listening on port:"+serverSocket.getLocalPort());
 				System.out.println("Ready to recieve...");
+				
 				clientSocket = serverSocket.accept();
 			} catch (IOException e) {
 				System.out.println("Accept failed...");
@@ -85,6 +87,7 @@ public class AppServer {
 			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			String inputLine = null;
 			String request = null;
+			System.out.println("------------pasa");
 			while ((inputLine = in.readLine()) != null) {
 				if (inputLine.matches("(GET)+.*"))
 					request = inputLine.split(" ")[1];
@@ -193,6 +196,35 @@ public class AppServer {
 	
 	private static int getPort() {
 		return System.getenv("PORT") != null? Integer.parseInt(System.getenv("PORT")) : 4567;
+	}
+
+	@Override
+	public void run() {
+		try {
+			try {
+				initialize();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			listen();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }
